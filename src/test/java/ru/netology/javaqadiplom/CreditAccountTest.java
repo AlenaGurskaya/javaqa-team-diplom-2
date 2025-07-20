@@ -18,13 +18,13 @@ public class CreditAccountTest {
     // - граничные значения ставки (1,2)
     @ParameterizedTest
     @CsvSource({
-            "0,1,1,1",
-            "1,2,2,2"
+            "0,1,1,0,1",
+            "1,2,2,1,2"
     })
-    public void shouldCreateCreditAccount(int initialBalance, int creditLimit, int rate, int expected) {
+    public void shouldCreateCreditAccount(int initialBalance, int creditLimit, int rate, int expectedInitialBalance, int expected) {
         CreditAccount account = new CreditAccount(initialBalance, creditLimit, rate);
 
-        Assertions.assertEquals(expected, account.getBalance());
+        Assertions.assertEquals(expectedInitialBalance, account.getBalance());
         Assertions.assertEquals(expected, account.getCreditLimit());
         Assertions.assertEquals(expected, account.getRate());
     }
