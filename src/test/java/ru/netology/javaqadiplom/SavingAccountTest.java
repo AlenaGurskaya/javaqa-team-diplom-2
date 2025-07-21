@@ -116,29 +116,15 @@ public class SavingAccountTest {
 
     // Тесты метода pay()
 
-    // Оригинальный тест: позитивный сценарий списания до minBalance
-    @Test
-    public void shouldAllowSpendingDownToMinBalance() {
-        SavingAccount account = new SavingAccount(
-                2_000,   // initialBalance
-                1_000,   // minBalance
-                10_000,  // maxBalance
-                5        // rate
-        );
-        boolean result = account.pay(1_000);
-        Assertions.assertTrue(result, "Платёж до minBalance должен разрешаться");
-        Assertions.assertEquals(
-                1_000,
-                account.getBalance(),
-                "Баланс после платежа до minBalance должен стать ровно minBalance"
-        );
-    }
 
-    // Позитивный сценарий: метод pay снижает баланс в пределах от minBalance до initialBalance
+    // Метод  pay
+
+    // Позитивны сценарий: метод pay изменяет баланс в границах допустимого
     @ParameterizedTest
     @CsvSource({
             "2000, 500,  true, 1500",  // списание в пределах
-            "2000,1000, true, 1000"    // списание ровно до minBalance
+            "2000, 1000, true, 1000",    // списание ровно до minBalance
+            "10000, 9000,  true, 1000"  // начальный баланс = maxBalance, списываем до minBalance
     })
     public void shouldPayWithinLimits(int initial, int amount, boolean wantOk, int wantBal) {
         SavingAccount acct = new SavingAccount(initial, 1000, 10000, 5);
