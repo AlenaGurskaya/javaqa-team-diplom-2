@@ -75,6 +75,8 @@ public class SavingAccountTest {
     //Тесты метода add()
 
     // Оригинальный тест: позитивный сценарий пополнения ниже maxBalance
+
+
     @Test
     public void shouldAddLessThanMaxBalance() {
         SavingAccount account = new SavingAccount(
@@ -83,6 +85,7 @@ public class SavingAccountTest {
                 10_000,
                 5
         );
+
         account.add(3_000);
         Assertions.assertEquals(5_000, account.getBalance());
     }

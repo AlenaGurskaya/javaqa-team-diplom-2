@@ -45,6 +45,7 @@ public class SavingAccount extends Account {
                     "Начальный баланс не может быть больше максимального баланса."
             );
         }
+
         this.balance = initialBalance;
         this.minBalance = minBalance;
         this.maxBalance = maxBalance;
@@ -65,8 +66,10 @@ public class SavingAccount extends Account {
         if (amount <= 0) {
             return false;
         }
+
         if (balance - amount >= minBalance) {
             balance = balance - amount;
+
             return true;
         } else {
             return false;
@@ -89,8 +92,10 @@ public class SavingAccount extends Account {
         if (amount <= 0) {
             return false;
         }
+
         if (balance + amount <= maxBalance) {
             balance = balance + amount;
+
             return true;
         } else {
             return false;
