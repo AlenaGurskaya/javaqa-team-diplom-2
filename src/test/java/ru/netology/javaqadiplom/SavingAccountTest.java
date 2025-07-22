@@ -32,8 +32,8 @@ public class SavingAccountTest {
     public void shouldCreateAccountWithValidParams(int initial, int min, int max, int rate) {
         SavingAccount acct = new SavingAccount(initial, min, max, rate);
         Assertions.assertEquals(initial, acct.getBalance());
-        Assertions.assertEquals(min,     acct.getMinBalance());
-        Assertions.assertEquals(max,     acct.getMaxBalance());
+        Assertions.assertEquals(min, acct.getMinBalance());
+        Assertions.assertEquals(max, acct.getMaxBalance());
     }
 
     // Негативный сценарий: конструктор должен бросать IllegalArgumentException при отрицательной ставке
@@ -154,10 +154,19 @@ public class SavingAccountTest {
     @CsvSource({
             "2000,  10, 200",   // обычный расчёт
             "1001,  15, 150",   // дробная часть отбрасывается
-            "-100, 10, -10"     // отрицательный баланс
     })
     public void shouldCalculateYearChange(int balance, int rate, int want) {
         SavingAccount acct = new SavingAccount(balance, 0, 1000000, rate);
         Assertions.assertEquals(want, acct.yearChange());
+    }
+
+    // Расчет процентов при минусовом балансе
+    @Test
+    public void shouldCalculateYearChangeWithNegativeBalance() {
+        SavingAccount acct = new SavingAccount(0, 0, 1000000, 10);
+        // вручную выставляем отрицательный баланс
+        acct.balance = -100;
+
+        Assertions.assertEquals(-10, acct.yearChange());
     }
 }
