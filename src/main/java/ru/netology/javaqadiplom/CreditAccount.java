@@ -12,16 +12,30 @@ public class CreditAccount extends Account {
      * Создаёт новый объект кредитного счёта с заданными параметрами.
      * Если параметры некорректны (кредитный лимит отрицательный и так далее), то
      * должно выкидываться исключения вида IllegalArgumentException.
+
+     *
      * @param initialBalance - неотрицательное число, начальный баланс для счёта
-     * @param creditLimit - неотрицательное число, максимальная сумма которую можно задолжать банку
-     * @param rate - неотрицательное число, ставка кредитования для расчёта долга за отрицательный баланс
+     * @param creditLimit    - неотрицательное число, максимальная сумма которую можно задолжать банку
+     * @param rate           - неотрицательное число, ставка кредитования для расчёта долга за отрицательный баланс
      */
     public CreditAccount(int initialBalance, int creditLimit, int rate) {
-        if (rate <= 0) {
+        if (initialBalance < 0) {
             throw new IllegalArgumentException(
                     "Накопительная ставка не может быть отрицательной, а у вас: " + rate
             );
         }
+
+        if (creditLimit <= 0) {
+            throw new IllegalArgumentException(
+                    "Кредитный лимит не может быть отрицательным " + creditLimit
+            );
+        }
+        if (rate <= 0) {
+            throw new IllegalArgumentException(
+                    "Ставка не может быть отрицательной " + rate
+            );
+        }
+
         this.balance = initialBalance;
         this.creditLimit = creditLimit;
         this.rate = rate;
@@ -33,6 +47,8 @@ public class CreditAccount extends Account {
      * на сумму покупки. Если же операция может привести к некорректному
      * состоянию счёта (например, баланс может уйти меньше чем лимит), то операция должна
      * завершиться вернув false и ничего не поменяв на счёте.
+
+     *
      * @param amount - сумма покупки
      * @return true если операция прошла успешно, false иначе.
      */
@@ -41,13 +57,13 @@ public class CreditAccount extends Account {
         if (amount <= 0) {
             return false;
         }
-        balance = balance - amount;
-        if (balance > -creditLimit) {
-            balance = -amount;
-            return true;
-        } else {
+
+        int newBalance = balance - amount;
+        if (newBalance < -creditLimit) {
             return false;
         }
+        balance = newBalance;
+        return true;
     }
 
     /**
@@ -56,9 +72,11 @@ public class CreditAccount extends Account {
      * на сумму покупки. Если же операция может привести к некорректному
      * состоянию счёта, то операция должна
      * завершиться вернув false и ничего не поменяв на счёте.
+
+     *
      * @param amount - сумма пополнения
-     * @return true если операция прошла успешно, false иначе.
      * @param amount
+     * @return true если операция прошла успешно, false иначе.
      * @return
      */
     @Override
@@ -66,7 +84,7 @@ public class CreditAccount extends Account {
         if (amount <= 0) {
             return false;
         }
-        balance = amount;
+        balance += amount;
         return true;
     }
 
@@ -80,10 +98,16 @@ public class CreditAccount extends Account {
      */
     @Override
     public int yearChange() {
-        return balance / 100 * rate;
+
+        if (balance < 0) {
+            return balance * rate / 100;
+        }
+        return 0;
+
     }
 
     public int getCreditLimit() {
         return creditLimit;
     }
+
 }
